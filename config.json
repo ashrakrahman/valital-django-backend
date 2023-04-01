@@ -1,0 +1,33 @@
+{
+  "listeners": {
+    "*:8000": {
+      "pass": "routes"
+    }
+  },
+
+  "routes": [
+    {
+      "match": {
+        "uri": "/static/*"
+      },
+
+      "action": {
+        "share": "/app/api$uri"
+      }
+    },
+    {
+      "action": {
+        "pass": "applications/webapp"
+      }
+    }
+  ],
+
+  "applications": {
+    "webapp": {
+      "type": "python 3",
+      "path": "/app/api",
+      "home": "/opt/api-env",
+      "module": "valital_django_backend.wsgi"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+version: "3"
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: valital-django-api
+    image: valital-django-api
+    restart: unless-stopped
+    ports:
+      - 8000:8000
+    networks:
+      - valital-network
+networks:
+  valital-network:
