@@ -1,9 +1,11 @@
+import json
 from django.http import JsonResponse
 from drf_yasg.utils import swagger_auto_schema
 import requests
 from rest_framework.decorators import api_view
 from rest_framework import serializers
-from .serializers import WordSerializer
+from .serializers import NumberSerializer, WordSerializer
+from drf_yasg import openapi
 
 
 @swagger_auto_schema(
@@ -60,3 +62,41 @@ def get_word(request, word):
         return JsonResponse({"error": str(e)}, status=500)
     except serializers.ValidationError as e:
         return JsonResponse({"error": "Failed to serialize data"}, status=500)
+
+
+@swagger_auto_schema(
+    method="POST",
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            "num": openapi.Schema(type=openapi.TYPE_NUMBER),
+        },
+    ),
+    security=[],
+    tags=["Word API"],
+    responses={"200": "Success", "400": "Bad Request"},
+)
+@api_view(["POST"])
+def number_to_word(request):
+    body_unicode = request.body.decode("utf-8")
+    body_data = json.loads(body_unicode)
+
+    serializer = NumberSerializer(data=body_data)
+    digit_to_str = {
+        0: "zero",
+        1: "one",
+        2: "two",
+        3: "three",
+        4: "four",
+        5: "five",
+        6: "six",
+        7: "seven",
+        8: "eight",
+        9: "nine",
+    }
+
+    if serializer.is_valid():
+        num = serializer.validated_data["num"]
+        return JsonResponse({"data": digit_to_str[num]})
+    else:
+        return JsonResponse({"errors": serializer.errors}, status=400)
