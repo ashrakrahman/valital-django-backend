@@ -25,7 +25,7 @@ schema_view = get_schema_view(
         default_version="v1",
         description="Technical Test",
         terms_of_service="N/A",
-        contact=openapi.Contact(email="ashrakragman@gmail.com"),
+        contact=openapi.Contact(email="ashrakrahman@gmail.com"),
         license=openapi.License(name="BSD License"),
     ),
     # For local development change it to local port, for docker it should be docker port
