@@ -52,7 +52,7 @@ def get_word(request, word):
 
             if verb_data is None:
                 return JsonResponse(
-                    {"data": element},
+                    {"data": data},
                     safe=False,
                 )
 

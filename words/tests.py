@@ -43,7 +43,7 @@ class GetWordTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             json.loads(response.content),
-            {"data": self.mock_data_non_verb[0]},
+            {"data": self.mock_data_non_verb},
         )
 
     @patch("requests.get")
