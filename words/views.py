@@ -46,23 +46,42 @@ def get_word(request, word):
             non_verb_data = None
 
             for element in data:
-                if element["meanings"][0]["partOfSpeech"] == "verb":
-                    verb_data = data[0]["meanings"]
-                else:
-                    non_verb_data = data[0]["meanings"]
+                for meaning in element["meanings"]:
+                    if meaning["partOfSpeech"] == "verb":
+                        verb_data = meaning
+                        break
+                    else:
+                        non_verb_data = meaning
+                        break
 
             selected_data = verb_data if verb_data is not None else non_verb_data
-            serializer = WordSerializer(data=selected_data, many=True)
+            serializer = WordSerializer(data=selected_data)
 
             if serializer.is_valid():
                 serialized_data = serializer.data
-                for wordDefinition in serialized_data[0]["definitions"]:
+                for wordDefinition in serialized_data["definitions"]:
                     if "example" in wordDefinition and verb_data is not None:
                         verb_exmple = wordDefinition["example"]
-                        return JsonResponse({"data": verb_exmple}, safe=False)
+                        return JsonResponse(
+                            {
+                                "data": {
+                                    "partOfSpeech": serialized_data["partOfSpeech"],
+                                    "example": verb_exmple,
+                                }
+                            },
+                            safe=False,
+                        )
                     else:
                         non_verb_definitioan = wordDefinition["definition"]
-                        return JsonResponse({"data": non_verb_definitioan}, safe=False)
+                        return JsonResponse(
+                            {
+                                "data": {
+                                    "partOfSpeech": serialized_data["partOfSpeech"],
+                                    "definition": non_verb_definitioan,
+                                }
+                            },
+                            safe=False,
+                        )
             else:
                 return JsonResponse({"errors": serializer.errors}, status=400)
         elif response.status_code == 404:
@@ -75,8 +94,6 @@ def get_word(request, word):
             )
     except requests.exceptions.RequestException as e:
         return JsonResponse({"error": str(e)}, status=500)
-    except serializers.ValidationError as e:
-        return JsonResponse({"error": "Failed to serialize data"}, status=500)
 
 
 @swagger_auto_schema(
