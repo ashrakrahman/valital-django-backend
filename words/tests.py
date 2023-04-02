@@ -43,12 +43,7 @@ class GetWordTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             json.loads(response.content),
-            {
-                "data": {
-                    "partOfSpeech": "noun",
-                    "definition": "An elongated curved tropical fruit that grows in bunches and has a creamy flesh and a smooth skin.",
-                }
-            },
+            {"data": self.mock_data_non_verb[0]},
         )
 
     @patch("requests.get")

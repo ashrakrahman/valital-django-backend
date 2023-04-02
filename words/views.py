@@ -43,19 +43,20 @@ def get_word(request, word):
         if response.status_code == 200:
             data = response.json()
             verb_data = None
-            non_verb_data = None
 
             for element in data:
                 for meaning in element["meanings"]:
                     if meaning["partOfSpeech"] == "verb":
                         verb_data = meaning
                         break
-                    else:
-                        non_verb_data = meaning
-                        break
 
-            selected_data = verb_data if verb_data is not None else non_verb_data
-            serializer = WordSerializer(data=selected_data)
+            if verb_data is None:
+                return JsonResponse(
+                    {"data": element},
+                    safe=False,
+                )
+
+            serializer = WordSerializer(data=verb_data)
 
             if serializer.is_valid():
                 serialized_data = serializer.data
@@ -72,22 +73,11 @@ def get_word(request, word):
                             safe=False,
                         )
                     else:
-                        non_verb_definitioan = wordDefinition["definition"]
                         return JsonResponse(
-                            {
-                                "data": {
-                                    "partOfSpeech": serialized_data["partOfSpeech"],
-                                    "definition": non_verb_definitioan,
-                                }
-                            },
-                            safe=False,
+                            {"error": "Data not found"}, status=response.status_code
                         )
             else:
                 return JsonResponse({"errors": serializer.errors}, status=400)
-        elif response.status_code == 404:
-            return JsonResponse(
-                {"error": "Data not found"}, status=response.status_code
-            )
         else:
             return JsonResponse(
                 {"error": "Failed to fetch data"}, status=response.status_code
