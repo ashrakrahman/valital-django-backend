@@ -16,7 +16,16 @@ from drf_yasg import openapi
 )
 @api_view(["GET"])
 def index(request):
-    return JsonResponse({"Hello": "World"})
+    return JsonResponse(
+        {
+            "app": "Valital django Backend",
+            "version": "0.0.1",
+            "developer_name": "Ashrak Rahman Lipu",
+            "developer_email": "ashrakrahman@gmail.com",
+            "developer_contact": "+14384622346",
+            "developer_address": "Montreal,Quebec",
+        }
+    )
 
 
 @swagger_auto_schema(
@@ -33,21 +42,27 @@ def get_word(request, word):
         )
         if response.status_code == 200:
             data = response.json()
-            data = data[0]["meanings"]
+            verb_data = None
+            non_verb_data = None
 
-            serializer = WordSerializer(data=data, many=True)
+            for element in data:
+                if element["meanings"][0]["partOfSpeech"] == "verb":
+                    verb_data = data[0]["meanings"]
+                else:
+                    non_verb_data = data[0]["meanings"]
+
+            selected_data = verb_data if verb_data is not None else non_verb_data
+            serializer = WordSerializer(data=selected_data, many=True)
 
             if serializer.is_valid():
                 serialized_data = serializer.data
-                verb_exmple = None
-
-                for wordDefinition in serialized_data:
-                    if wordDefinition["partOfSpeech"] == "verb":
-                        verb_exmple = wordDefinition["partOfSpeech"]
-                if not verb_exmple:
-                    return JsonResponse(serialized_data, safe=False)
-                else:
-                    return JsonResponse(verb_exmple, safe=False)
+                for wordDefinition in serialized_data[0]["definitions"]:
+                    if "example" in wordDefinition and verb_data is not None:
+                        verb_exmple = wordDefinition["example"]
+                        return JsonResponse({"data": verb_exmple}, safe=False)
+                    else:
+                        non_verb_definitioan = wordDefinition["definition"]
+                        return JsonResponse({"data": non_verb_definitioan}, safe=False)
             else:
                 return JsonResponse({"errors": serializer.errors}, status=400)
         elif response.status_code == 404:

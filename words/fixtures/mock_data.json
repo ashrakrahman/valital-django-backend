@@ -1,0 +1,44 @@
+[
+  {
+    "word": "walk",
+    "phonetics": [
+      {
+        "audio": "https://api.dictionaryapi.dev/media/pronunciations/en/walk-au.mp3",
+        "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=75899611",
+        "license": {
+          "name": "BY-SA 4.0",
+          "url": "https://creativecommons.org/licenses/by-sa/4.0"
+        }
+      }
+    ],
+    "meanings": [
+      {
+        "partOfSpeech": "verb",
+        "definitions": [
+          {
+            "definition": "To move on the feet by alternately setting each foot (or pair or group of feet, in the case of animals with four or more feet) forward, with at least one foot on the ground at all times. Compare run.",
+            "synonyms": [],
+            "antonyms": [],
+            "example": "To walk briskly for an hour every day is to keep fit."
+          }
+        ],
+        "synonyms": [
+          "nicked",
+          "pinched",
+          "stolen",
+          "full",
+          "waulk",
+          "acquitted",
+          "get off",
+          "go free"
+        ],
+        "antonyms": ["run"]
+      }
+    ],
+    "license": {
+      "name": "CC BY-SA 3.0",
+      "url": "https://creativecommons.org/licenses/by-sa/3.0"
+    },
+    "sourceUrls": ["https://en.wiktionary.org/wiki/walk"]
+  }
+]
