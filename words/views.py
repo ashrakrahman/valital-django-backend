@@ -4,6 +4,7 @@ from drf_yasg.utils import swagger_auto_schema
 import requests
 from rest_framework.decorators import api_view
 from rest_framework import serializers
+from valital_django_backend.constants import DICTONARY_API_ENDPOINT, DIGIT_TO_WORD_DICT
 from .serializers import NumberSerializer, WordSerializer
 from drf_yasg import openapi
 
@@ -37,9 +38,7 @@ def index(request):
 @api_view(["GET"])
 def get_word(request, word):
     try:
-        response = requests.get(
-            "https://api.dictionaryapi.dev/api/v2/entries/en/" + word
-        )
+        response = requests.get(DICTONARY_API_ENDPOINT + word)
         if response.status_code == 200:
             data = response.json()
             verb_data = None
@@ -104,21 +103,9 @@ def number_to_word(request):
     body_data = json.loads(body_unicode)
 
     serializer = NumberSerializer(data=body_data)
-    digit_to_str = {
-        0: "zero",
-        1: "one",
-        2: "two",
-        3: "three",
-        4: "four",
-        5: "five",
-        6: "six",
-        7: "seven",
-        8: "eight",
-        9: "nine",
-    }
 
     if serializer.is_valid():
         num = serializer.validated_data["num"]
-        return JsonResponse({"data": digit_to_str[num]})
+        return JsonResponse({"data": DIGIT_TO_WORD_DICT[num]})
     else:
         return JsonResponse({"errors": serializer.errors}, status=400)
