@@ -31,6 +31,18 @@ You will find a swagger ui to access the APIs. Sample image follows:
 
 <img src="./swagger.png" alt="Logo" >
 
+<!-- Architecture Diagram -->
+
+## Architecture Diagram
+
+<img src="./architecture_diagram.png" alt="architecture_diagram" >
+
+<!-- API Work flow -->
+
+## API Work flow
+
+<img src="./api_workflow.png" alt="api_workflow" >
+
 <!-- CONTACT -->
 
 ## Contact

@@ -1,7 +1,7 @@
 from django.test import TestCase
 import requests
 from rest_framework.test import APIRequestFactory
-from .views import number_to_word, get_word
+from .views import number_to_word, get_word, index
 import json
 from django.urls import reverse
 from unittest.mock import patch
@@ -86,4 +86,29 @@ class NumberToWordTestCase(TestCase):
         self.assertEqual(
             json.loads(response.content),
             {"errors": {"num": ["Ensure this value is less than or equal to 9."]}},
+        )
+
+
+class WhoMadeMeTestCase(TestCase):
+    def setUp(self):
+        self.factory = APIRequestFactory()
+        self.url = reverse("index")
+
+    def test_who_made_me_valid_data(self):
+        request = self.factory.get(
+            self.url,
+            content_type="application/json",
+        )
+        response = index(request)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            json.loads(response.content),
+            {
+                "app": "Valital django Backend",
+                "version": "0.0.1",
+                "developer_name": "Ashrak Rahman Lipu",
+                "developer_email": "ashrakrahman@gmail.com",
+                "developer_contact": "+14384622346",
+                "developer_address": "Montreal,Quebec",
+            },
         )
